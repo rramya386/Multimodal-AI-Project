@@ -4,12 +4,10 @@ import base64
 import os
 from openai import OpenAI
 import whisper
+from io import BytesIO
 
 # Load OpenAI API key
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
-def encode_image_to_base64(uploaded_file):
-    return base64.b64encode(uploaded_file.read()).decode("utf-8")
 
 st.title("🧠 Multimodal Q&A Assistant")
 st.write("Upload an image or audio, and ask natural-language questions.")
@@ -23,31 +21,7 @@ if uploaded_image and image_question:
     image_bytes = uploaded_image.read()
     base64_image = base64.b64encode(image_bytes).decode("utf-8")
 
-    from io import BytesIO
     st.image(Image.open(BytesIO(image_bytes)), caption="Uploaded Image", use_column_width=True)
-
-    # Send to OpenAI Vision model
-    response = client.chat.completions.create(
-        model="gpt-4-vision-preview",
-        messages=[
-            {
-                "role": "user",
-                "content": [
-                    {"type": "text", "text": image_question},
-                    {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
-                ]
-            }
-        ],
-        max_tokens=300
-    )
-
-    st.success(response.choices[0].message.content)
-
-
-# Show the image using a memory copy
-from io import BytesIO
-st.image(Image.open(BytesIO(image_bytes)), caption="Uploaded Image", use_column_width=True)
-
 
     # Send to OpenAI Vision model
     response = client.chat.completions.create(
