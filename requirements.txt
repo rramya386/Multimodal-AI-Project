@@ -1,0 +1,6 @@
+openai
+streamlit
+whisper
+Pillow
+torch
+opencv-python
