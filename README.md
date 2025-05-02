@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🧠 Multimodal Q&A Assistant
 
 This app allows users to upload an **image** or **audio** and ask questions using natural language. It combines **OpenAI GPT-4V** for image reasoning and **Whisper** for audio transcription.
@@ -28,3 +29,6 @@ export OPENAI_API_KEY=your_key_here
 
 ## Screenshots
 ![screenshot](screenshots/sample.png)
+=======
+# Multimodal-AI-Project
+>>>>>>> 08f949f131b5ea1b905ea34c617ccbff79dbf1af
