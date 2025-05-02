@@ -20,9 +20,14 @@ uploaded_image = st.file_uploader("Upload an Image", type=["jpg", "png", "jpeg"]
 image_question = st.text_input("Ask a question about the image:")
 
 if uploaded_image and image_question:
-    base64_image = encode_image_to_base64(uploaded_image)
-    st.image(Image.open(uploaded_image), caption="Uploaded Image", use_column_width=True)
-    st.write("Processing...")
+  # Save a copy of the uploaded image to read twice
+image_bytes = uploaded_image.read()
+base64_image = base64.b64encode(image_bytes).decode("utf-8")
+
+# Show the image using a memory copy
+from io import BytesIO
+st.image(Image.open(BytesIO(image_bytes)), caption="Uploaded Image", use_column_width=True)
+
 
     # Send to OpenAI Vision model
     response = client.chat.completions.create(
