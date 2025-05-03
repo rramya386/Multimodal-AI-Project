@@ -3,7 +3,6 @@ from PIL import Image
 import base64
 import os
 from openai import OpenAI
-import whisper
 from io import BytesIO
 
 # Load OpenAI API key
@@ -21,7 +20,7 @@ if uploaded_image and image_question:
     image_bytes = uploaded_image.read()
     base64_image = base64.b64encode(image_bytes).decode("utf-8")
 
-    st.image(Image.open(BytesIO(image_bytes)), caption="Uploaded Image", use_column_width=True)
+    st.image(Image.open(BytesIO(image_bytes)), caption="Uploaded Image", use_container_width=True)
 
     # Send to OpenAI Vision model
     response = client.chat.completions.create(
@@ -46,10 +45,14 @@ uploaded_audio = st.file_uploader("Upload an audio file (MP3/WAV)", type=["mp3",
 
 if uploaded_audio:
     st.write("Transcribing...")
-    model = whisper.load_model("base")
     audio_path = f"temp_audio.{uploaded_audio.type.split('/')[-1]}"
     with open(audio_path, "wb") as f:
         f.write(uploaded_audio.read())
-    result = model.transcribe(audio_path)
-    st.write("Transcription:")
-    st.success(result["text"])
+
+    with open(audio_path, "rb") as audio_file:
+        transcript = client.audio.transcriptions.create(
+            model="whisper-1",
+            file=audio_file
+        )
+        st.write("Transcription:")
+        st.success(transcript.text)
